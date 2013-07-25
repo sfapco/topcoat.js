@@ -1,0 +1,16 @@
+{
+  "name": "topcoat.js",
+  "repo": "sfapco/topcoat.js",
+  "description": "Javascript wrapper for creaing Topcoat DOM elements",
+  "version": "0.0.1",
+  "keywords": [],
+  "dependencies": {
+    "juliangruber/events": "*",
+    "component/domify": "*"
+  },
+  "development": {},
+  "license": "MIT",
+  "scripts": [
+    "index.js"
+  ]
+}
