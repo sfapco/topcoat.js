@@ -110,14 +110,67 @@ function replaceClass (el, className, newClassName) {
  */
 
 function proxyEvents (el, emitter) {
-	el.addEventListener('click', emitter.emit.bind(emitter, 'click'), false);
-	el.addEventListener('mousemove', emitter.emit.bind(emitter, 'mousemove'), false);
-	el.addEventListener('mouseover', emitter.emit.bind(emitter, 'mouseover'), false);
-	el.addEventListener('mouseenter', emitter.emit.bind(emitter, 'mouseenter'), false);
-	el.addEventListener('mouseout', emitter.emit.bind(emitter, 'mouseout'), false);
-	el.addEventListener('mouseleave', emitter.emit.bind(emitter, 'mouseleave'), false);
-	el.addEventListener('mouseup', emitter.emit.bind(emitter, 'mouseup'), false);
-	el.addEventListener('mousedown', emitter.emit.bind(emitter, 'mousedown'), false);
+	// meta
+	proxy('load');
+	proxy('abort');
+	proxy('error');
+	proxy('invalid');
+	proxy('reset');
+	proxy('scroll');
+	proxy('select');
+	proxy('selectstart');
+	proxy('submit');
+	proxy('webkitfullscreenchange', 'fullscreenchange');
+	proxy('webkitfullscreenerror', 'fullscreenerror');
+	proxy('fullscreenchange');
+	proxy('fullscreenerror');
+
+	// interactions
+	proxy('click');
+	proxy('dblclick');
+	proxy('contextmenu');
+	proxy('drag');
+	proxy('dragenter');
+	proxy('dragend');
+	proxy('dragleave');
+	proxy('dragover');
+	proxy('dragstart');
+	proxy('drop');
+
+	// mouse events
+	proxy('mousemove');
+	proxy('mouseover');
+	proxy('mouseenter');
+	proxy('mouseout');
+	proxy('mouseleave');
+	proxy('mouseup');
+	proxy('mousedown');
+	proxy('mousewheel');
+
+	// copy/cut/paste events
+	proxy('beforecopy');
+	proxy('copy');
+	proxy('beforecut');
+	proxy('cut');
+	proxy('beforepatse');
+	proxy('patse');
+
+	// input events
+	proxy('blur');
+	proxy('change');
+	proxy('focus');
+	proxy('input');
+
+	// keyboard
+	proxy('keydown');
+	proxy('keyup');
+	proxy('keypress');
+	
+
+
+	function proxy(event, as) {
+		el.addEventListener(event, emitter.emit.bind(emitter, as || event), false);
+	}
 }
 
 
@@ -132,6 +185,8 @@ function TopcoatElement (el) {
 	if (!(this instanceof Button)) return new Button(el);
 	else if (el && !(el instanceof Element)) throw new TypeError("expecting an instance of `Element`");
 	this.el = el || domify('<span />');
+	// proxy events
+	proxyEvents(this.el, this);
 }
 
 // inherit from `EventEmitter`
@@ -564,6 +619,8 @@ function List () {
 
 	this.append(this.header.el);
 	this.append(this.container.el);
+	// proxy events
+	proxyEvents(this.el, this);
 }
 
 // inherit from `TopcoatElement`
@@ -726,6 +783,8 @@ function ListHeader () {
 	if (!(this instanceof ListHeader)) return new ListHeader();
 	TopcoatElement.call(this);
 	this.el = domify('<h3 class="topcoat-list__header"></h3>');
+	// proxy events
+	proxyEvents(this.el, this);
 }
 
 // inherit from `TopcoatElement`
@@ -745,6 +804,8 @@ function ListContainer () {
 	this.el = domify('<ul class="topcoat-list"></ul>');
 	this.items = [];
 	this.length = 0;
+	// proxy events
+	proxyEvents(this.el, this);
 }
 
 // inherit from `TopcoatElement`
@@ -946,6 +1007,8 @@ function ListItem (el) {
 	if (!(this instanceof ListItem)) return new ListItem(el);
 	TopcoatElement.call(this);
 	this.el = el || domify('<li class="topcoat-list__item"></li>');
+	// proxy events
+	proxyEvents(this.el, this);
 }
 
 // inherit from `TopcoatElement`
@@ -965,6 +1028,8 @@ function NavigationBar (el) {
 	this.el = el || domify('<div class="topcoat-navigation-bar"></div>');
 	this.items = [];
 	this.titleItem = null;
+	// proxy events
+	proxyEvents(this.el, this);
 }
 
 // inherit from `TopcoatElement`
@@ -1027,6 +1092,8 @@ function NavigationBarItem (el) {
 	this.el = el || domify(
 		'<div class="topcoat-navigation-bar__item"></div>'
 	);
+	// proxy events
+	proxyEvents(this.el, this);
 }
 
 // inherit from `TopcoatElement`
@@ -1117,6 +1184,8 @@ function NavigationBarTitle (el) {
 	this.el = el || domify(
 		'<h1 class="topcoat-navigation-bar__title"></h1>'
 	);
+	// proxy events
+	proxyEvents(this.el, this);
 }
 
 // inherit from `TopcoatElement`
@@ -1137,6 +1206,8 @@ function Input (el) {
 	this.el = el || domify(
 		'<input type="text" class="topcoat-text-input" value="" placeholder=""/>'
 	);
+	// proxy events
+	proxyEvents(this.el, this);
 }
 
 // inherit from `TopcoatElement`
@@ -1171,6 +1242,142 @@ Input.prototype.placeholder = function (value) {
 };
 
 
+/**
+ * `LargeInput` constructor
+ *
+ * @api public
+ * @param {Element} `el`
+ */
 
+topcoat.LargeInput = LargeInput;
+function LargeInput (el) {
+	if (!(this instanceof LargeInput)) return new LargeInput(el);
+	Input.call(this);
+	this.el = el || domify(
+		'<input type="text" class="topcoat-text-input--large" value="" placeholder=""/>'
+	);
+}
+
+// inherit from `Input`
+LargeInput.prototype.__proto__ = Input.prototype;
+
+
+/**
+ * `SearchInput` constructor
+ *
+ * @api public
+ * @param {Element} `el`
+ */
+
+topcoat.SearchInput = SearchInput;
+function SearchInput (el) {
+	if (!(this instanceof SearchInput)) return new SearchInput(el);
+	Input.call(this);
+	this.el = el || domify(
+		'<input type="text" class="topcoat-search-input" value="" placeholder=""/>'
+	);
+	// proxy events
+	proxyEvents(this.el, this);
+}
+
+// inherit from `Input`
+SearchInput.prototype.__proto__ = Input.prototype;
+
+
+/**
+ * `LargeSearchInput` constructor
+ *
+ * @api public
+ * @param {Element} `el`
+ */
+
+topcoat.LargeSearchInput = LargeSearchInput;
+function LargeSearchInput (el) {
+	if (!(this instanceof LargeSearchInput)) return new LargeSearchInput(el);
+	Input.call(this);
+	this.el = el || domify(	
+		'<input type="text" class="topcoat-search-input--large" value="" placeholder=""/>'
+	);
+	// proxy events
+	proxyEvents(this.el, this);
+}
+
+// inherit from `Input`
+LargeSearchInput.prototype.__proto__ = Input.prototype;
+
+
+/**
+ * `TextArea` constructor
+ *
+ * @api public
+ * @param {Element} `el`
+ */
+
+topcoat.TextArea = TextArea;
+function TextArea (el) {
+	if (!(this instanceof TextArea)) return new TextArea(el);
+	Input.call(this);
+	this.el = el || domify(
+		'<textarea class="topcoat-textarea" rows="6" cols="36" placeholder=""></textarea>'
+	);
+	// proxy events
+	proxyEvents(this.el, this);
+}
+
+// inherit from `Input`
+TextArea.prototype.__proto__ = Input.prototype;
+
+
+/**
+ * Gets/sets the row count
+ *
+ * @api public
+ * @param {Number} `size`
+ */
+
+TextArea.prototype.rows = function (size) {
+	if (undefined === size) return this.el.getAttribute('rows');
+	else if ('number' !== typeof size) throw new TypeError("expecting	a `number` for row size");
+	else this.el.setAttribute('rows', size);
+	return this;
+};
+
+
+/**
+ * Gets/sets the column count
+ *
+ * @api public
+ * @param {Number} `size`
+ */
+
+TextArea.prototype.columns = 
+TextArea.prototype.cols = function (size) {
+	if (undefined === size) return this.el.getAttribute('cols');
+	else if ('number' !== typeof size) throw new TypeError("expecting	a `number` for column size");
+	else this.el.setAttribute('cols', size);
+	return this;
+};
+
+
+/**
+ * `LargeTextArea` constructor
+ *
+ * @api public
+ * @param {Element} `el`
+ */
+
+topcoat.LargeTextArea = LargeTextArea;
+function LargeTextArea (el) {
+	if (!(this instanceof LargeTextArea)) return new LargeTextArea(el);
+	TextArea.call(this);
+	this.el = el || domify(
+		'<textarea class="topcoat-textarea--large" rows="6" cols="36" placeholder=""></textarea>'
+	);
+	// proxy events
+	proxyEvents(this.el, this);
+}
+
+// inherit from `Input`
+LargeTextArea.prototype.__proto__ = TextArea.prototype;
 
 
