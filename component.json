@@ -1,5 +1,5 @@
 {
-  "name": "topcoat.js",
+  "name": "topcoat",
   "repo": "sfapco/topcoat.js",
   "description": "Javascript wrapper for creaing Topcoat DOM elements",
   "version": "0.0.1",
