@@ -2,7 +2,7 @@
   "name": "topcoat",
   "repo": "sfapco/topcoat.js",
   "description": "Javascript wrapper for creaing Topcoat DOM elements",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "keywords": [],
   "dependencies": {
     "juliangruber/events": "*",

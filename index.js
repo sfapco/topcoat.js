@@ -181,7 +181,7 @@ function proxyEvents (el, emitter) {
 
 topcoat.TopcoatElement = TopcoatElement;
 function TopcoatElement (el) {
-	if (!(this instanceof Button)) return new Button(el);
+	if (!(this instanceof TopcoatElement)) return new TopcoatElement(el);
 	else if (el && !(el instanceof Element)) throw new TypeError("expecting an instance of `Element`");
 	EventEmitter.call(this)
 	this.el = el || domify('<span />');
