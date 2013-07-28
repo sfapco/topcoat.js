@@ -95,9 +95,8 @@ function removeClass (el, className) {
  */
 
 function replaceClass (el, className, newClassName) {
-	if (!removeClass(el, className)) return false;
-	else if (!addClass(el, newClassName)) return false;
-	else return true;
+	removeClass(el, className);
+	addClass(el, newClassName);
 }
 
 
@@ -184,6 +183,7 @@ topcoat.TopcoatElement = TopcoatElement;
 function TopcoatElement (el) {
 	if (!(this instanceof Button)) return new Button(el);
 	else if (el && !(el instanceof Element)) throw new TypeError("expecting an instance of `Element`");
+	EventEmitter.call(this)
 	this.el = el || domify('<span />');
 	// proxy events
 	proxyEvents(this.el, this);
@@ -191,7 +191,7 @@ function TopcoatElement (el) {
 
 // inherit from `EventEmitter`
 TopcoatElement.prototype.__proto__ = EventEmitter.prototype;
-
+TopcoatElement.prototype.constructor = TopcoatElement;
 
 
 /**
@@ -416,6 +416,59 @@ TopcoatElement.prototype.active = function (state) {
 
 
 /**
+ * Adds a class on the element
+ *
+ * @api public
+ * @param {String} `className`
+ */
+
+TopcoatElement.prototype.addClass = function (className) {
+	addClass(this.el, className);
+	return this;
+};
+
+
+/**
+ * Removes a class on the element
+ *
+ * @api public
+ * @param {String} `className`
+ */
+
+TopcoatElement.prototype.removeClass = function (className) {
+	removeClass(this.el, className);
+	return this;
+};
+
+
+/**
+ * Replaces a class on the element
+ *
+ * @api public
+ * @param {String} `className`
+ * @param {String} `newClassName`
+ */
+
+TopcoatElement.prototype.replaceClass = function (className, newClassName) {
+	replaceClass(this.el, className, newClassName);
+	return this;
+};
+
+
+/**
+ * Checks if the element has a class
+ *
+ * @api public
+ * @param {String} `className`
+ */
+
+TopcoatElement.prototype.hasClass = function (className) {
+	hasClass(this.el, className);
+	return this;
+};
+
+
+/**
  * `Button` constructor
  *
  * @api public
@@ -427,9 +480,9 @@ function Button (el) {
 	if (!(this instanceof Button)) return new Button(el);
 	else if (el && !(el instanceof Element)) throw new TypeError("expecting an instance of `Element`");
 	TopcoatElement.call(this, el);
-	this.el = el || domify('<a class="topcoat-button"></a>');
+	this.el = el || domify('<a></a>');
 
-	// proxy events
+	this.addClass('topcoat-button');
 	proxyEvents(this.el, this);
 }
 
@@ -447,7 +500,8 @@ topcoat.QuietButton = QuietButton;
 function QuietButton (el) {
 	if (!(this instanceof QuietButton)) return new QuietButton(el);
 	Button.call(this, el);
-	replaceClass(this.el, 'topcoat-button', 'topcoat-button--quiet');
+	this.removeClass('topcoat-button');
+	this.addClass('topcoat-button--quiet');
 }
 
 // inherit from `Button`
@@ -464,7 +518,8 @@ topcoat.LargeButton = LargeButton;
 function LargeButton (el) {
 	if (!(this instanceof LargeButton)) return new LargeButton(el);
 	Button.call(this, el);
-	replaceClass(this.el, 'topcoat-button', 'topcoat-button--large');
+	this.removeClass('topcoat-button');
+	this.addClass('topcoat-button--large');
 }
 
 // inherit from `Button`
@@ -481,7 +536,7 @@ topcoat.LargeQuietButton = LargeQuietButton;
 function LargeQuietButton (el) {
 	if (!(this instanceof LargeQuietButton)) return new LargeQuietButton(el);
 	Button.call(this, el);
-	replaceClass(this.el, 'topcoat-button', 'topcoat-button--large--quiet');
+	this.replaceClass('topcoat-button', 'topcoat-button--large--quiet');
 }
 
 // inherit from `Button`
@@ -498,7 +553,7 @@ topcoat.CallToActionButton = CallToActionButton;
 function CallToActionButton (el) {
 	if (!(this instanceof CallToActionButton)) return new CallToActionButton(el);
 	Button.call(this, el);
-	replaceClass(this.el, 'topcoat-button', 'topcoat-button--cta');
+	this.replaceClass('topcoat-button', 'topcoat-button--cta');
 }
 
 // inherit from `Button`
@@ -515,7 +570,7 @@ topcoat.LargeCallToActionButton = LargeCallToActionButton;
 function LargeCallToActionButton (el) {
 	if (!(this instanceof LargeCallToActionButton)) return new LargeCallToActionButton(el);
 	Button.call(this, el);
-	replaceClass(this.el, 'topcoat-button', 'topcoat-button--large--cta');
+	this.replaceClass('topcoat-button', 'topcoat-button--large--cta');
 }
 
 // inherit from `Button`
@@ -533,7 +588,7 @@ topcoat.IconButton = IconButton;
 function IconButton (el) {
 	if (!(this instanceof IconButton)) return new IconButton(el);
 	Button.call(this, el);
-	replaceClass(this.el, 'topcoat-button', 'topcoat-icon-button');
+	this.replaceClass('topcoat-button', 'topcoat-icon-button');
 	this.el.appendChild(domify(
 		'<span class="topcoat-icon topcoat-icon--menu-stack"></span>'
 	));
@@ -555,7 +610,7 @@ topcoat.QuietIconButton = QuietIconButton;
 function QuietIconButton (el) {
 	if (!(this instanceof QuietIconButton)) return new QuietIconButton(el);
 	IconButton.call(this, el);
-	replaceClass(this.el, 'topcoat-icon-button', 'topcoat-icon-button--quiet');
+	this.replaceClass('topcoat-icon-button', 'topcoat-icon-button--quiet');
 
 }
 
@@ -574,7 +629,7 @@ topcoat.LargeIconButton = LargeIconButton;
 function LargeIconButton (el) {
 	if (!(this instanceof LargeIconButton)) return new LargeIconButton(el);
 	IconButton.call(this, el);
-	replaceClass(this.el, 'topcoat-icon-button', 'topcoat-icon-button--large');
+	this.replaceClass('topcoat-icon-button', 'topcoat-icon-button--large');
 
 }
 
@@ -593,7 +648,7 @@ topcoat.LargeQuietIconButton = LargeQuietIconButton;
 function LargeQuietIconButton (el) {
 	if (!(this instanceof LargeQuietIconButton)) return new LargeQuietIconButton(el);
 	IconButton.call(this, el);
-	replaceClass(this.el, 'topcoat-icon-button', 'topcoat-icon-button--large--quiet');
+	this.replaceClass('topcoat-icon-button', 'topcoat-icon-button--large--quiet');
 
 }
 
@@ -823,6 +878,8 @@ ListContainer.prototype.push =
 ListContainer.prototype.add = function (item) {
 	if ('string' === typeof item)
 		item = ListItem().text(item);
+	else if (item instanceof Element)
+		item = ListItem.wrap(item);
 
 	if (!(item instanceof ListItem))
 		throw new TypeError("expecting `string` or an instance of `ListItem`");
@@ -844,6 +901,8 @@ ListContainer.prototype.add = function (item) {
 ListContainer.prototype.unshift = function (item) {
 	if ('string' === typeof item)
 		item = ListItem().text(item);
+	else if (item instanceof Element)
+		item = ListItem.wrap(item);
 
 	if (!(item instanceof ListItem))
 		throw new TypeError("expecting `string` or an instance of `ListItem`");
@@ -920,10 +979,7 @@ ListContainer.prototype.reverse = function () {
  */
 
 ListContainer.prototype.clear = function () {
-	for (var i = this.items.length - 1; i >= 0; i--) {
-		this.pop();
-	}
-
+	for (var i = this.items.length - 1; i >= 0; i--) this.pop();
 	return this;
 };
 
@@ -1006,13 +1062,26 @@ topcoat.ListItem = ListItem;
 function ListItem (el) {
 	if (!(this instanceof ListItem)) return new ListItem(el);
 	TopcoatElement.call(this);
-	this.el = el || domify('<li class="topcoat-list__item"></li>');
+	this.el = el || domify('<li></li>');
+	this.addClass('topcoat-list__item');
 	// proxy events
 	proxyEvents(this.el, this);
 }
 
 // inherit from `TopcoatElement`
 ListItem.prototype.__proto__ = TopcoatElement.prototype;
+
+
+/**
+ * Wraps an element in a `ListItem` instance
+ *
+ * @api public
+ * @param {Element} `el`
+ */
+
+ListItem.wrap = function (el) {
+	return ListItem().append(el);
+};
 
 
 /**
@@ -1025,9 +1094,10 @@ topcoat.NavigationBar = NavigationBar;
 function NavigationBar (el) {
 	if (!(this instanceof NavigationBar)) return new NavigationBar(el);
 	TopcoatElement.call(this);
-	this.el = el || domify('<div class="topcoat-navigation-bar"></div>');
+	this.el = el || domify('<div></div>');
 	this.items = [];
 	this.titleItem = null;
+	this.addClass('topcoat-navigation-bar');
 	// proxy events
 	proxyEvents(this.el, this);
 }
@@ -1045,7 +1115,6 @@ NavigationBar.prototype.__proto__ = TopcoatElement.prototype;
  */
 
 NavigationBar.prototype.add = function (item, opts) {
-	var el;
 	if (item instanceof NavigationBarItem) {
 		return this.add(TopcoatElement(item.el), opts);
 	} else if (item instanceof TopcoatElement) {
@@ -1056,6 +1125,8 @@ NavigationBar.prototype.add = function (item, opts) {
 		if (opts && opts.align) navItem.align(opts.align);
 		if (opts && opts.size) navItem.size(opts.size);
 		return navItem;
+	} else if (item instanceof Element) {
+		return this.add(TopcoatElement(item), opts);
 	} else {
 		throw new TypeError("expecting instance of `TopcoatElement` or `NavigationBarItem`");
 	}
@@ -1090,8 +1161,10 @@ function NavigationBarItem (el) {
 	if (!(this instanceof NavigationBarItem)) return new NavigationBarItem(el);
 	TopcoatElement.call(this);
 	this.el = el || domify(
-		'<div class="topcoat-navigation-bar__item"></div>'
+		'<div></div>'
 	);
+
+	this.addClass('topcoat-navigation-bar__item');
 	// proxy events
 	proxyEvents(this.el, this);
 }
@@ -1129,9 +1202,8 @@ NavigationBarItem.prototype.size = function (size) {
 		// add size to class list
 		addClass(this.el, size);
 
-		return this;
 	} else if ('number' === typeof size) {
-		this.el
+		this.width(size);
 	}
 
 	return this;
@@ -1182,8 +1254,10 @@ function NavigationBarTitle (el) {
 	if (!(this instanceof NavigationBarTitle)) return new NavigationBarTitle(el);
 	TopcoatElement.call(this);
 	this.el = el || domify(
-		'<h1 class="topcoat-navigation-bar__title"></h1>'
+		'<h1></h1>'
 	);
+
+	this.addClass('topcoat-navigation-bar__title')
 	// proxy events
 	proxyEvents(this.el, this);
 }
@@ -1204,14 +1278,30 @@ function Input (el) {
 	if (!(this instanceof Input)) return new Input(el);
 	TopcoatElement.call(this);
 	this.el = el || domify(
-		'<input type="text" class="topcoat-text-input" value="" placeholder=""/>'
+		'<input type="text" value="" placeholder=""/>'
 	);
+
+	this.addClass('topcoat-text-input');
 	// proxy events
 	proxyEvents(this.el, this);
 }
 
 // inherit from `TopcoatElement`
 Input.prototype.__proto__ = TopcoatElement.prototype;
+
+
+/**
+ * Sets the input type
+ *
+ * @api public
+ * @param {String} `type`
+ */
+
+Input.prototype.type = function (type) {
+	if (undefined === type) return this.el.getAttribute('type');
+	else this.el.setAttribute('type', type);
+	return this;
+};
 
 
 /**
@@ -1223,7 +1313,7 @@ Input.prototype.__proto__ = TopcoatElement.prototype;
 
 Input.prototype.value = function (value) {
 	if (undefined === value) return this.el.getAttribute('value');
-	else this.el.setAttribute('value', value);
+	else (this.el.value = value) && this.el.setAttribute('value', value);
 	return this;
 };
 
@@ -1254,8 +1344,10 @@ function LargeInput (el) {
 	if (!(this instanceof LargeInput)) return new LargeInput(el);
 	Input.call(this);
 	this.el = el || domify(
-		'<input type="text" class="topcoat-text-input--large" value="" placeholder=""/>'
+		'<input type="text" value="" placeholder=""/>'
 	);
+	this.addClass('topcoat-text-input--large');
+	proxyEvents(this.el, this);
 }
 
 // inherit from `Input`
@@ -1274,8 +1366,10 @@ function SearchInput (el) {
 	if (!(this instanceof SearchInput)) return new SearchInput(el);
 	Input.call(this);
 	this.el = el || domify(
-		'<input type="text" class="topcoat-search-input" value="" placeholder=""/>'
+		'<input type="text" value="" placeholder=""/>'
 	);
+
+	this.addClass('topcoat-search-input');
 	// proxy events
 	proxyEvents(this.el, this);
 }
@@ -1296,8 +1390,10 @@ function LargeSearchInput (el) {
 	if (!(this instanceof LargeSearchInput)) return new LargeSearchInput(el);
 	Input.call(this);
 	this.el = el || domify(	
-		'<input type="text" class="topcoat-search-input--large" value="" placeholder=""/>'
+		'<input type="text" value="" placeholder=""/>'
 	);
+
+	this.addClass('topcoat-search-input--large');
 	// proxy events
 	proxyEvents(this.el, this);
 }
@@ -1318,8 +1414,10 @@ function TextArea (el) {
 	if (!(this instanceof TextArea)) return new TextArea(el);
 	Input.call(this);
 	this.el = el || domify(
-		'<textarea class="topcoat-textarea" rows="6" cols="36" placeholder=""></textarea>'
+		'<textarea rows="6" cols="36" placeholder=""></textarea>'
 	);
+
+	this.addClass('topcoat-textarea');
 	// proxy events
 	proxyEvents(this.el, this);
 }
@@ -1371,8 +1469,9 @@ function LargeTextArea (el) {
 	if (!(this instanceof LargeTextArea)) return new LargeTextArea(el);
 	TextArea.call(this);
 	this.el = el || domify(
-		'<textarea class="topcoat-textarea--large" rows="6" cols="36" placeholder=""></textarea>'
+		'<textarea rows="6" cols="36" placeholder=""></textarea>'
 	);
+	this.addClass('topcoat-textarea--large');
 	// proxy events
 	proxyEvents(this.el, this);
 }
