@@ -5,6 +5,7 @@
 
 var EventEmitter = require('events').EventEmitter
   , domify = require('domify')
+  , camelize = require('camelize')
 
 
 /**
@@ -318,7 +319,8 @@ TopcoatElement.prototype.height = function (height) {
  */
 
 TopcoatElement.prototype.show = function (override) {
-	this.el.style.setProperty('display', override || 'block');
+	this.lastDisplay = this.el.style.display !== 'none'? this.el.style.display : '';
+	this.el.style.setProperty('display', override || this.lastDisplay || 'block');
 	return this;
 };
 
@@ -463,6 +465,27 @@ TopcoatElement.prototype.replaceClass = function (className, newClassName) {
 
 TopcoatElement.prototype.hasClass = function (className) {
 	hasClass(this.el, className);
+	return this;
+};
+
+
+/**
+ * Sets a css property
+ *
+ * @api public
+ * @param {String} `key`
+ * @param {Mixed} `value`
+ */
+
+TopcoatElement.prototype.css = function (key, value) {
+	if ('string' === typeof key && !value) {
+		return getComputedStyle(this.el)[camelize(key)];
+	} else if ('object' === typeof key) {
+		for (var prop in key) this.css(prop, key[prop]);
+	} else if ('string' === typeof key && undefined !== value) {
+		this.el.style.setProperty(key, value);
+	}
+
 	return this;
 };
 

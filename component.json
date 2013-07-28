@@ -6,7 +6,8 @@
   "keywords": [],
   "dependencies": {
     "juliangruber/events": "*",
-    "component/domify": "*"
+    "component/domify": "*",
+    "jwerle/camelize": "*"
   },
   "development": {},
   "license": "MIT",
