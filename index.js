@@ -483,6 +483,7 @@ TopcoatElement.prototype.css = function (key, value) {
 	} else if ('object' === typeof key) {
 		for (var prop in key) this.css(prop, key[prop]);
 	} else if ('string' === typeof key && undefined !== value) {
+		value = ('number' === typeof value)? value +='px' : value;
 		this.el.style.setProperty(key, value);
 	}
 
