@@ -191,7 +191,6 @@ function TopcoatElement (el) {
 
 // inherit from `EventEmitter`
 TopcoatElement.prototype.__proto__ = EventEmitter.prototype;
-TopcoatElement.prototype.constructor = TopcoatElement;
 
 
 /**
