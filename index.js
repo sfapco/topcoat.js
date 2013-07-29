@@ -469,7 +469,7 @@ TopcoatElement.prototype.hasClass = function (className) {
 
 
 /**
- * Sets a css property
+ * Sets/gets a css property
  *
  * @api public
  * @param {String} `key`
@@ -484,6 +484,29 @@ TopcoatElement.prototype.css = function (key, value) {
 	} else if ('string' === typeof key && undefined !== value) {
 		value = ('number' === typeof value)? value +='px' : value;
 		this.el.style.setProperty(key, value);
+	}
+
+	return this;
+};
+
+
+/**
+ * Sets/gets an attribute
+ *
+ * @api public
+ * @param {String} `key`
+ * @param {Mixed} `value`
+ */
+
+TopcoatElement.prototype.prop =
+TopcoatElement.prototype.attr = function (key, value) {
+	if ('string' === typeof key && !value) {
+		return this.el.getAttribute(key);
+	} else if ('object' === typeof key) {
+		for (var prop in key) this.attr(prop, key[prop]);
+	} else if ('string' === typeof key && undefined !== value) {
+		value = ('number' === typeof value)? value +='px' : value;
+		this.el.setAttribute(key, value);
 	}
 
 	return this;
