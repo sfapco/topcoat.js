@@ -492,6 +492,19 @@ TopcoatElement.prototype.css = function (key, value) {
 
 
 /**
+ * Short hand for `.html('<a href="`url`">`title`</a>')
+ *
+ * @api public
+ * @param {String} `title`
+ * @param {String} `url`
+ */
+
+TopcoatElement.prototype.link = function (title, url) {
+	return this.html('<a href="'+ url +'">'+ title +'</a>');
+};
+
+
+/**
  * `Button` constructor
  *
  * @api public
