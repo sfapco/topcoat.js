@@ -464,8 +464,7 @@ TopcoatElement.prototype.replaceClass = function (className, newClassName) {
  */
 
 TopcoatElement.prototype.hasClass = function (className) {
-	hasClass(this.el, className);
-	return this;
+	return hasClass(this.el, className);
 };
 
 
